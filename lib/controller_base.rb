@@ -8,23 +8,22 @@ class ControllerBase
   attr_reader :req, :res, :params
 
   # Setup the controller
-  def initialize(req, res, route_params)
+  def initialize(req, res, params = {})
     @req = req
     @res = res
-    @params = configure_params(params)
+    @params = (req.params).merge(params)
+    @session = Session.new(req)
   end
 
   # Merges query_params and body_params with route_params
   def configure_params(params)
-    if req["rack.request.query_string"]
-      params.merge!(req["rack.request.query_string"])
-    end
-
-    if req["rack.request.query_hash"]
-      params.merge!(req["rack.request.query_string"])
-    end
-
-    params
+    # if req["rack.request.query_string"]
+    #   params.merge!(req["rack.request.query_string"])
+    # end
+    #
+    # if req["rack.request.query_hash"]
+    #   params.merge!(req["rack.request.query_string"])
+    # end
   end
   # Helper method to alias @already_built_response
   def already_built_response?

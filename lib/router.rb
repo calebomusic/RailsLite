@@ -15,12 +15,19 @@ class Route
     true
   end
 
-  # use pattern to pull out route params 
+  # use pattern to pull out route params
   # instantiate controller and call controller action
   def run(req, res)
     if matches?(req)
-      route_params = @pattern.match(req.path)
-      controller = @controller_class.new(req, res, route_params)
+      regex = @pattern.match(req.path)
+      
+      params = {}
+
+      regex.names.each do |name|
+        params[name] = regex[name]
+      end
+
+      controller = @controller_class.new(req, res, params)
       controller.invoke_action(action_name)
     end
   end
